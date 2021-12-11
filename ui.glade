@@ -2,6 +2,52 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkAboutDialog" id="about_dialog">
+    <property name="can-focus">False</property>
+    <property name="type-hint">dialog</property>
+    <property name="program-name">minbrowser</property>
+    <property name="version">v1.0.0</property>
+    <property name="copyright" translatable="yes">Copyright © 2021 minfaox3. All Rights Reserved.</property>
+    <property name="website">https://github.com/minfaox3/minbrowser</property>
+    <property name="website-label" translatable="yes">https://github.com/minfaox3/minbrowser</property>
+    <property name="logo-icon-name">web-browser-symbolic</property>
+    <property name="license-type">mpl-2-0</property>
+    <signal name="delete-event" handler="about_dialog_delete_event" swapped="no"/>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <object class="GtkButton" id="ad_quit_button">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="use-stock">True</property>
+                <property name="always-show-image">True</property>
+                <signal name="clicked" handler="ad_quit_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkPopoverMenu" id="popovermenu1">
     <property name="can-focus">False</property>
     <child>
@@ -10,13 +56,14 @@
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkButton" id="open_button">
+          <object class="GtkButton" id="pvm_open_button">
             <property name="label">gtk-open</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="use-stock">True</property>
             <property name="always-show-image">True</property>
+            <signal name="clicked" handler="pvm_open_button_clicked" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -25,13 +72,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="config_button">
+          <object class="GtkButton" id="pvm_config_button">
             <property name="label">gtk-preferences</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="use-stock">True</property>
             <property name="always-show-image">True</property>
+            <signal name="clicked" handler="pvm_config_button_clicked" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -40,18 +88,35 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="help_button">
-            <property name="label">gtk-help</property>
+          <object class="GtkButton" id="pvm_about_button">
+            <property name="label">gtk-about</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="use-stock">True</property>
             <property name="always-show-image">True</property>
+            <signal name="clicked" handler="pvm_about_button_clicked" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="pvm_quit_button">
+            <property name="label">gtk-close</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="use-stock">True</property>
+            <property name="always-show-image">True</property>
+            <signal name="clicked" handler="pvm_quit_button_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>
@@ -72,21 +137,21 @@
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkBox" id="bar_box">
+          <object class="GtkBox" id="mw_bar_box">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkButton" id="back_button">
+              <object class="GtkButton" id="mw_back_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="always-show-image">True</property>
-                <signal name="clicked" handler="back_button_clicked" swapped="no"/>
+                <signal name="clicked" handler="mw_back_button_clicked" swapped="no"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkImage" id="mw_back_image">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="stock">gtk-go-back</property>
+                    <property name="icon-name">edit-undo-symbolic.symbolic</property>
                   </object>
                 </child>
               </object>
@@ -97,17 +162,17 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="reload_button">
+              <object class="GtkButton" id="mw_reload_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="always-show-image">True</property>
-                <signal name="clicked" handler="reload_button_clicked" swapped="no"/>
+                <signal name="clicked" handler="mw_reload_button_clicked" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="reload_image">
+                  <object class="GtkImage" id="mw_reload_image">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="stock">gtk-refresh</property>
+                    <property name="icon-name">view-refresh-symbolic</property>
                     <property name="icon_size">3</property>
                   </object>
                 </child>
@@ -119,17 +184,17 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="home_button">
+              <object class="GtkButton" id="mw_home_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="always-show-image">True</property>
-                <signal name="clicked" handler="home_button_clicked" swapped="no"/>
+                <signal name="clicked" handler="mw_home_button_clicked" swapped="no"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkImage" id="mw_home_butto">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="stock">gtk-home</property>
+                    <property name="icon-name">go-home-symbolic</property>
                     <property name="icon_size">3</property>
                   </object>
                 </child>
@@ -141,7 +206,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSearchEntry" id="search_bar">
+              <object class="GtkSearchEntry" id="mw_search_bar">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="truncate-multiline">True</property>
@@ -150,7 +215,7 @@
                 <property name="primary-icon-sensitive">False</property>
                 <property name="placeholder-text" translatable="yes">URLを入力してください</property>
                 <property name="input-purpose">url</property>
-                <signal name="activate" handler="enterkey_clicked" swapped="no"/>
+                <signal name="activate" handler="mw_enterkey_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -159,13 +224,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="bookmark_button">
+              <object class="GtkButton" id="mw_bookmark_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="bookmark_button_clicked" swapped="no"/>
+                <signal name="clicked" handler="mw_bookmark_button_clicked" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="bookmark_image">
+                  <object class="GtkImage" id="mw_bookmark_image">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="icon-name">non-starred-symbolic</property>
@@ -179,7 +244,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkMenuButton" id="popup_menu_button">
+              <object class="GtkMenuButton" id="mw_popup_menu_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -206,61 +271,32 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="main_box">
+          <object class="GtkNotebook" id="mw_note_book">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
+            <property name="show-border">False</property>
             <child>
-              <object class="GtkScrolledWindow" id="viewer">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="shadow-type">in</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
+              <placeholder/>
             </child>
-            <child>
-              <object class="GtkButton" id="source_button">
+            <child type="tab">
+              <placeholder/>
+            </child>
+            <child type="action-end">
+              <object class="GtkButton" id="t_add_tab_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="source_button_clicked" swapped="no"/>
+                <signal name="clicked" handler="t_add_tab_button_clicked" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="sb_image">
+                  <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="stock">gtk-media-previous</property>
+                    <property name="icon-name">tab-new-symbolic</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow" id="svs">
-                <property name="can-focus">True</property>
-                <property name="no-show-all">True</property>
-                <property name="shadow-type">in</property>
-                <child>
-                  <object class="GtkTextView" id="source_viewer">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="editable">False</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="tab-fill">False</property>
               </packing>
             </child>
           </object>
