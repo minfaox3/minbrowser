@@ -15,7 +15,7 @@ def decode_str(s):
     except:
       pass
 
-class BrowseTab(Gtk.Box):
+class TabContent(Gtk.Box):
   def __init__(self) -> None:
       super().__init__(homogeneous=Gtk.Orientation.HORIZONTAL, spacing=3)
       self.view_window = Gtk.ScrolledWindow.new(None, None)
@@ -51,6 +51,7 @@ class BrowseTab(Gtk.Box):
 
   def hide_source_view_window(self):
     self.source_view_window.hide()
+    self.source_view_button_icon.set_from_icon_name("go-last-symbolic-rtl", Gtk.IconSize.BUTTON)
 
   def switch_source_view(self):
     if(self.source_view_window.get_property("visible")):
@@ -70,23 +71,47 @@ class BrowseTab(Gtk.Box):
   def load_uri(self, uri):
     self.webview.load_uri(uri)
 
+class TabLabel(Gtk.Box):
+  def __init__(self) -> None:
+      super().__init__(homogeneous=Gtk.Orientation.HORIZONTAL, spacing=2)
+      self.label = Gtk.Label.new("new tab")
+      self.image = Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON)
+      self.button = Gtk.Button.new()
+      self.button.set_image(self.image)
+      self.button.set_relief(Gtk.ReliefStyle.NONE)
+      self.pack_start(self.label, True, True, 0)
+      self.pack_start(self.button, False, False, 0)
+      self.show_all()
+
+class BrowseTab():
+  def __init__(self, page_num) -> None:
+    self.page_num = page_num
+    self.label = TabLabel()
+    self.content = TabContent()
+    self.label.button.connect("clicked", self.close_tab)
+  
+  def close_tab(self, button):
+    note_book.remove_page(self.page_num)
+    tabs.pop(note_book.get_current_page())
+
+
 #this handle connect to gobject's signal
 class SignalHandler: 
   #MainWindowSignals
   def mw_back_button_clicked(self, button):
-    tabs[operate_page].go_back()
+    tabs[operate_page].content.go_back()
 
   def mw_reload_button_clicked(self, button):
-    tabs[operate_page].reload()
+    tabs[operate_page].content.reload()
     search_bar.set_text(uris[operate_page])
     
   def mw_home_button_clicked(self, button):
-    tabs[operate_page].load_uri(homepage)
+    tabs[operate_page].content.load_uri(homepage)
 
   def mw_enterkey_clicked(self, button):
     global search_text
     search_text = search_bar.get_text()
-    tabs[operate_page].load_uri(search_text)
+    tabs[operate_page].content.load_uri(search_text)
 
   def mw_bookmark_button_clicked(self, button):
     if uris[operate_page] in bookmarks:
@@ -131,15 +156,15 @@ class SignalHandler:
     uris.append("")
     htmls.append("")
     search_bar_texts.append("")
-    tabs.append(BrowseTab())
-    note_book.append_page(tabs[len(tabs)-1], Gtk.Label.new("new tab"))
+    tabs.append(BrowseTab(operate_page))
+    note_book.append_page(tabs[len(tabs)-1].content, tabs[len(tabs)-1].label)
     note_book.show_all()
     note_book.do_change_current_page(note_book, note_book.get_n_pages()-(note_book.get_current_page()+1))
-    tabs[recent_op].hide_source_view_window()
-    tabs[note_book.get_current_page()].hide_source_view_window()
+    tabs[recent_op].content.hide_source_view_window()
+    tabs[note_book.get_current_page()].content.hide_source_view_window()
 
 def source_view_button_clicked(button):
-  tabs[operate_page].switch_source_view()
+  tabs[operate_page].content.switch_source_view()
 
 
 #these functions connect to webkit::webview
@@ -150,13 +175,13 @@ def load_changed(self, event, ud=None):
     if resource is not None:
       resource.get_data(None, get_data,None)
     else:
-      tabs[operate_page].load_uri("https://www.google.com/search?q="+search_text)
+      tabs[operate_page].content.load_uri("https://www.google.com/search?q="+search_text)
 
 def get_data(self, task, ud=None):
   global htmls
   htmls[operate_page] = decode_str(self.get_data_finish(task))
-  if(tabs[operate_page].source_view_window.get_property("visible")):
-    buffer = tabs[operate_page].source_view.get_buffer()
+  if(tabs[operate_page].content.source_view_window.get_property("visible")):
+    buffer = tabs[operate_page].content.source_view.get_buffer()
     buffer.set_text(htmls[operate_page])
 
 def uri_changed(self, v):
@@ -171,10 +196,27 @@ def uri_changed(self, v):
     bookmark_image.set_from_icon_name("non-starred-symbolic", Gtk.IconSize.BUTTON)
 
 def title_changed(self, v):
-  note_book.set_tab_label_text(note_book.get_nth_page(operate_page), self.get_title())
+  tabs[operate_page].label.label.set_text(self.get_title())
 
 def create(self, n):
-  print("SIGNAL DETECTED:CREATE") 
+  global uris
+  global htmls
+  global search_bar_texts
+  global tabs
+  global operate_page
+  recent_op = operate_page
+  search_bar_texts[operate_page] = search_bar.get_text()
+  operate_page = note_book.get_n_pages()
+  uris.append("")
+  htmls.append("")
+  search_bar_texts.append("")
+  tabs.append(BrowseTab(len(tabs)))
+  note_book.append_page(tabs[len(tabs)-1].content, tabs[len(tabs)-1].label)
+  note_book.show_all()
+  note_book.do_change_current_page(note_book, note_book.get_n_pages()-(note_book.get_current_page()+1))
+  tabs[recent_op].content.hide_source_view_window()
+  tabs[note_book.get_current_page()].content.hide_source_view_window()
+  tabs[note_book.get_current_page()].content.load_uri(n.get_request().get_uri())
 
 def switch_page(self, page, page_num):
   global operate_page
@@ -194,6 +236,7 @@ operate_page = 0
 bookmarks = []
 uris = []
 tabs = []
+labels = []
 htmls = []
 search_bar_texts = []
 
@@ -210,10 +253,10 @@ note_book.connect("switch-page", switch_page)
 uris.append("")
 htmls.append("")
 search_bar_texts.append("")
-tabs.append(BrowseTab())
-note_book.append_page(tabs[len(tabs)-1], Gtk.Label.new("new tab"))
+tabs.append(BrowseTab(0))
+note_book.append_page(tabs[len(tabs)-1].content, tabs[len(tabs)-1].label)
 
 window.connect("delete-event", Gtk.main_quit)
 window.show_all()
-tabs[0].hide_source_view_window()
+tabs[0].content.hide_source_view_window()
 Gtk.main()
