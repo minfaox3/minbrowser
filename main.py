@@ -91,8 +91,10 @@ class BrowseTab():
     self.label.button.connect("clicked", self.close_tab)
   
   def close_tab(self, button):
+    global operate_page
     note_book.remove_page(self.page_num)
-    tabs.pop(note_book.get_current_page())
+    tabs.pop(self.page_num)
+    operate_page = note_book.get_current_page()
 
 
 #this handle connect to gobject's signal
