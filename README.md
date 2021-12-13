@@ -1,5 +1,5 @@
 # minbrowser
-![minbrowser](https://user-images.githubusercontent.com/38807392/145425330-4605376d-52b7-42ae-893c-8c2df7d94e2e.gif)
+![minbrowser](https://user-images.githubusercontent.com/38807392/145830333-c75e1142-59a7-420f-b2ba-d19ea3170639.gif)
 This is a small browser developed as an example of programming with GTK and Python in ChromeOS.  
 By clicking the button on the right of the screen, you can easily view the HTML of the page you are looking at.  
 Other features are equivalent to those of a standard browser.  
@@ -21,8 +21,9 @@ Other features are equivalent to those of a standard browser.
 * Bookmark several webpages.
 * Record history.
 * Change icon theme.
-### Planned
 * Open multiple webpages in one window.
+### Planned
+
 
 ## Recommended development tool
 * Glade(https://glade.gnome.org/) for ui editor
