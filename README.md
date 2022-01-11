@@ -17,13 +17,12 @@ Other features are equivalent to those of a standard browser.
 
 ## Features
 ### Added
+* Open multiple webpages in one window.
+### Planned
 * Change homepage
 * Bookmark several webpages.
 * Record history.
 * Change icon theme.
-* Open multiple webpages in one window.
-### Planned
-
 
 ## Recommended development tool
 * Glade(https://glade.gnome.org/) for ui editor
